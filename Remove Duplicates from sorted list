@@ -1,0 +1,13 @@
+class Solution:
+    def deleteDuplicates(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        arr=[]
+        while head:
+            if(head.val not in arr):
+                arr.append(head.val)
+            head=head.next
+        dummy=ListNode(0)
+        curr=dummy
+        for i in arr:
+            curr.next=ListNode(i)
+            curr=curr.next
+        return dummy.next
