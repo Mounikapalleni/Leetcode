@@ -1,0 +1,44 @@
+class Solution:
+    def longestBalanced(self, s: str) -> int:
+        countA = countB = countC = 0
+        max_len = 0
+        max_run = 1
+        curr_run = 1
+        seen_abc = {(0, 0): -1}
+        seen_ab = {(0, 0): -1}
+        seen_ac = {(0, 0): -1}
+        seen_bc = {(0, 0): -1}
+        for i, ch in enumerate(s):
+            if i > 0:
+                if s[i] == s[i - 1]:
+                    curr_run += 1
+                else:
+                    curr_run = 1
+                max_run = max(max_run, curr_run)
+            if ch == 'a':
+                countA += 1
+            elif ch == 'b':
+                countB += 1
+            else:
+                countC += 1
+            key_abc = (countA - countB, countA - countC)
+            if key_abc in seen_abc:
+                max_len = max(max_len, i - seen_abc[key_abc])
+            else:
+                seen_abc[key_abc] = i
+            key_ab = (countA - countB, countC)
+            if key_ab in seen_ab:
+                max_len = max(max_len, i - seen_ab[key_ab])
+            else:
+                seen_ab[key_ab] = i
+            key_ac = (countA - countC, countB)
+            if key_ac in seen_ac:
+                max_len = max(max_len, i - seen_ac[key_ac])
+            else:
+                seen_ac[key_ac] = i
+            key_bc = (countB - countC, countA)
+            if key_bc in seen_bc:
+                max_len = max(max_len, i - seen_bc[key_bc])
+            else:
+                seen_bc[key_bc] = i
+        return max(max_len, max_run)
