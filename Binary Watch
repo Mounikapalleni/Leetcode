@@ -1,0 +1,12 @@
+class Solution:
+    def readBinaryWatch(self, turnedOn: int):
+        result = []
+        
+        for hour in range(12):
+            for minute in range(60):
+                # Count total number of 1 bits
+                if (bin(hour).count('1') + bin(minute).count('1')) == turnedOn:
+                    # Format minute with leading zero
+                    result.append(f"{hour}:{minute:02d}")
+        
+        return result
