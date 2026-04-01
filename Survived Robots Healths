@@ -1,0 +1,34 @@
+from typing import List
+
+class Solution:
+    def survivedRobotsHealths(self, positions: List[int], healths: List[int], directions: str) -> List[int]:
+        robots = sorted([(positions[i], healths[i], directions[i], i) for i in range(len(positions))])
+        
+        stack = []
+        survivors = {}
+        
+        for pos, health, direction, idx in robots:
+            if direction == 'R':
+                stack.append([health, idx])
+            else:
+                while stack and health > 0:
+                    if stack[-1][0] < health:
+                        health -= 1
+                        stack.pop()
+                    elif stack[-1][0] == health:
+                        stack.pop()
+                        health = 0
+                        break
+                    else:
+                        stack[-1][0] -= 1
+                        health = 0
+                        break
+                
+                if health > 0:
+                    survivors[idx] = health
+        
+        while stack:
+            h, i = stack.pop()
+            survivors[i] = h
+        
+        return [survivors[i] for i in sorted(survivors)]
