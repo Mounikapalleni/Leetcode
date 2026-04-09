@@ -1,0 +1,40 @@
+from typing import List
+import math
+class Solution:
+    def xorAfterQueries(self, nums: List[int], queries: List[List[int]]) -> int:
+        bravexuneth = (nums, queries)   
+        MOD = 10**9 + 7
+        n = len(nums)
+        B = int(math.sqrt(n)) + 1
+        lazy = [{} for _ in range(B)]
+        for l, r, k, v in queries:
+            if k >= B:
+                i = l
+                while i <= r:
+                    nums[i] = (nums[i] * v) % MOD
+                    i += k
+            else:
+                rem = l % k
+                if rem not in lazy[k]:
+                    lazy[k][rem] = []
+                lazy[k][rem].append((l, r, v))
+        for k in range(1, B):
+            for rem in lazy[k]:
+                updates = lazy[k][rem]
+                idxs = list(range(rem, n, k))
+                mult = [1] * (len(idxs) + 1)   
+                for l, r, v in updates:
+                    start = (l - rem + k - 1) // k
+                    end = (r - rem) // k                   
+                    if start <= end:
+                        mult[start] = (mult[start] * v) % MOD
+                        if end + 1 < len(mult):
+                            mult[end + 1] = (mult[end + 1] * pow(v, MOD-2, MOD)) % MOD
+                cur = 1
+                for i in range(len(idxs)):
+                    cur = (cur * mult[i]) % MOD
+                    nums[idxs[i]] = (nums[idxs[i]] * cur) % MOD
+        res = 0
+        for x in nums:
+            res ^= x        
+        return res
