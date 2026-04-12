@@ -1,0 +1,27 @@
+class Solution:
+    def minimumDistance(self, word: str) -> int:
+        def dist(a, b):
+            if a == 26 or b == 26:
+                return 0
+            x1, y1 = divmod(a, 6)
+            x2, y2 = divmod(b, 6)
+            return abs(x1 - x2) + abs(y1 - y2)
+
+        dp = {(26, 26): 0}
+
+        for ch in word:
+            c = ord(ch) - ord('A')
+            new_dp = {}
+            for (f1, f2), cost in dp.items():
+                v1 = cost + dist(f1, c)
+                v2 = cost + dist(f2, c)
+
+                key1 = (c, f2)
+                key2 = (f1, c)
+
+                new_dp[key1] = min(new_dp.get(key1, float('inf')), v1)
+                new_dp[key2] = min(new_dp.get(key2, float('inf')), v2)
+
+            dp = new_dp
+
+        return min(dp.values())
