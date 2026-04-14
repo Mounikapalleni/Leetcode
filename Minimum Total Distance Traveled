@@ -1,0 +1,20 @@
+from functools import lru_cache
+class Solution:
+    def minimumTotalDistance(self, robot, factory):
+        robot.sort()
+        factory.sort()
+        @lru_cache(None)
+        def dfs(i, j, used):
+            if i == len(robot):
+                return 0
+            if j == len(factory):
+                return float('inf')
+            pos, limit = factory[j]
+            res = dfs(i, j + 1, 0)
+            if used < limit:
+                res = min(
+                    res,
+                    abs(robot[i] - pos) + dfs(i + 1, j, used + 1)
+                )
+            return res
+        return dfs(0, 0, 0)
